@@ -12,11 +12,10 @@ algorithmic efficiency and visualisation of results.
 - [Project Structure](#project-structure)
 - [How It Works](#how-it-works)
 - [Results](#results)
-- [Contributing](#contributing)
-- [Acknowledgments] (#Acknowledgments)
+- [Librairies] (#Librairies)
 
 ## Introduction
-The SudokuMaster project aims to create a sophisticated Sudoku solver capable of solving various grids using advanced techniques such as backtracking and optimisation. With its focus on algorithmic efficiency and visualisation of results, SudokuMaster offers a powerful and interactive solution for Sudoku enthusiasts and researchers.
+The backtracking method for solving a Sudoku involves filling in the empty squares one by one. For each cell, you try a number from 1 to 9. If the number respects the rules (no duplicates in the row, column or sub-grid), you continue with the next square. If you reach a dead end, go back to the previous square and try another number. This process is repeated until the entire grid is filled correctly.
 
 ## Requirements
 - Python 3.10
@@ -24,7 +23,6 @@ The SudokuMaster project aims to create a sophisticated Sudoku solver capable of
 - NumPy
 - Pandas
 - Matplotlib
-- Seaborn
 
 ## Installation
 1. Clone the repository:
@@ -42,65 +40,54 @@ The SudokuMaster project aims to create a sophisticated Sudoku solver capable of
     - Select the dataset with all the differents Sudoku grids
     
 
-4. Run the main script:
+4. Run the visualisation script:
     ```sh
-    python main.py
+    python visualisation.py
     ```
 
 ## Project Structure
 
-image-defect-detection/
+sudoku solver/
 │
-├── images/
-│   ├── correct/           # Directory for correct images
-│   └── error/             # Directory for images with defects
+├── optimised backtracking
+│   ├── correct/           # The algorithm starts in a part of the grid where there are the most restrictions
+                             and then moves forward until it finds an error
+│   └── error/             # When the algorithm has found an error, it backtracks until it finds the error
 │
-├── main.py                # Main script for training and prediction
-├── requirements.txt       # Python dependencies
-└── README.md              # Project documentation
+├── simple backtracking              
+├── correct/       # The algorithm advances until it finds an error
+└── error/              # When the algorithm has found an error, it backtracks until it finds the error
+│
 
 ## How it works
 
-1. **Feature Extraction**: ORB (Oriented FAST and Rotated BRIEF) is used to extract keypoints and descriptors from images. ORB is efficient and fast, making it suitable for real-time applications.
-2. **Data Augmentation**: The imgaug library is used to augment the images. This includes random flips, rotations, scaling, and brightness adjustments to make the model more robust and generalize better to new data.
-3. **Clustering**: Descriptors are clustered using K-means to create a fixed-size feature vector for each image. This helps in standardizing the input for the classifier.
-4. **Classification**: An SVM (Support Vector Machine) is trained on the feature vectors. The SVM classifier is chosen for its effectiveness in high-dimensional spaces and its ability to handle cases where the number of dimensions exceeds the number of samples.
+1. **Find an empty cell**: The solver scans the grid and finds the first empty square (a square with no numbers). He always starts with the first available empty square in the order.
+2. **Try a number**: For this empty square, the solver tries to place a number between 1 and 9. He starts with 1 and gradually moves up
+3. **Check the Sudoku rules**: After placing a number in the square, the player checks that the number respects the Sudoku rules:
+- No duplicates in the same row.
+- No duplicates in the same column.
+- No duplicates in the same 3x3 square (or sub-grid).
+4. **Continue or go back**: If the number respects all the rules, the solver moves on to the next empty square and repeats the process.
+If no number can be placed in the square without violating the rules, the current solution is not correct. The solver erases the previous number (goes backwards, hence the term ‘backtracking’) and tries another number in the previous square.
+4. **Repeat the process**: The solver continues to try and check the numbers for each empty cell, backtracking when necessary, until the entire grid is filled correctly.
+4. **Finish with a complete solution**: Once all the boxes have been filled in, and each number complies with the Sudoku rules, the solution is found and the grid is solved.
 
 ## Results
 
-The model is evaluated on a test set to determine its accuracy in detecting printing defects. Here are the key results:
+Backtracking does its job well here, because it can solve any type of sudoku grid with 3 different levels of difficulty (easy, medium, hard).
 
-- **Accuracy**: XX%
-- **Precision**: XX%
-- **Recall**: XX%
-- **F1 Score**: XX%
+- **Easy**: 0,28 seconds
+- **Medium**: 0.37 seconds
+- **Hard**: 0.44 seconds
 
-These metrics demonstrate the model's effectiveness in identifying printing defects with a high degree of accuracy.
+These measurements show that, depending on the level of difficulty, the algorithm will take more or less time
 
-## Contributing
+## libraries
 
-We welcome contributions to improve this project! If you would like to contribute, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature-name`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/your-feature-name`).
-5. Open a Pull Request.
-
-Please ensure your pull request adheres to the following guidelines:
-
-- Describe the purpose of the pull request and what it changes.
-- Ensure the code follows the project's coding standards.
-- Include tests for any new functionality.
-
-## Acknowledgments
-
-We would like to thank the following resources and libraries that made this project possible:
+We made this project possible thanks to this libraries:
 
 - NumPy: A fundamental package for scientific computing in Python, providing support for arrays, matrices, and many mathematical functions to operate on them.
 - Pandas: A powerful library for data manipulation and analysis, offering data structures like DataFrames for handling and analyzing data efficiently.
 - NetworkX: A library for the creation, manipulation, and study of complex networks and graphs, providing tools for analyzing the structure and dynamics of networks.
 - Matplotlib: A comprehensive library for creating static, animated, and interactive visualizations in Python. It is widely used for plotting and visualizing data.
-- Seaborn: A statistical data visualization library based on Matplotlib, offering a high-level interface for drawing attractive and informative statistical graphics..
 
-If you have any questions or need further assistance, feel free to open an issue or contact the maintainers.
